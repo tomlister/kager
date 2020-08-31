@@ -94,10 +94,12 @@ func (e *Editor) Logic() {
 	if e.KeyInterval == 0 {
 		if ebiten.IsKeyPressed(ebiten.KeyDown) {
 			e.KeyInterval = 10
-			if int(e.CursorPos.x) > len(e.Data[int(e.CursorPos.y)+1]) {
-				e.CursorPos.x = float64(len(e.Data[int(e.CursorPos.y)+1])) - 1
+			if len(e.Data)-1 > int(e.CursorPos.y)+1 {
+				if int(e.CursorPos.x) > len(e.Data[int(e.CursorPos.y)+1]) {
+					e.CursorPos.x = float64(len(e.Data[int(e.CursorPos.y)+1])) - 1
+				}
+				e.CursorPos.y++
 			}
-			e.CursorPos.y++
 		} else if ebiten.IsKeyPressed(ebiten.KeyUp) {
 			e.KeyInterval = 10
 			if int(e.CursorPos.x) > len(e.Data[int(e.CursorPos.y)-1]) {
@@ -120,7 +122,15 @@ func (e *Editor) Logic() {
 				line := e.Data[int(e.CursorPos.y)]
 				e.Data[int(e.CursorPos.y)] = line[:int(e.CursorPos.x)-1] + line[int(e.CursorPos.x):]
 				e.CursorPos.x--
+			} else {
+				copy(e.Data[int(e.CursorPos.y):], e.Data[int(e.CursorPos.y)+1:])
+				e.Data[len(e.Data)-1] = ""
+				e.Data = e.Data[:len(e.Data)-1]
 			}
+		} else if ebiten.IsKeyPressed(ebiten.KeyEnter) {
+			e.KeyInterval = 5
+			e.Data = append(e.Data[:int(e.CursorPos.y)+2], e.Data[int(e.CursorPos.y+1):]...)
+			e.Data[int(e.CursorPos.y)+1] = ""
 		}
 	} else {
 		e.KeyInterval--
