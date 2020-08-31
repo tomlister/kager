@@ -57,6 +57,7 @@ func (r Rect) collideVec2(p Vec2) bool {
 
 func (e *Editor) findCursorPos(point Vec2) (Vec2, bool) {
 	for i, data := range e.Data {
+		// TODO: Figure a less shitty way of calculating the bounds of dataless lines
 		if data == "" {
 			data = "I"
 		}
