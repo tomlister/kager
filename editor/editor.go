@@ -82,6 +82,7 @@ func (e *Editor) Logic() {
 	e.addWhiteSpace()
 	_, yoffset := ebiten.Wheel()
 	e.ScrollOffset.y += yoffset
+	// TODO: Fix clicking
 	/*if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		cx, cy := ebiten.CursorPosition()
 		pos, found := e.findCursorPos(Vec2{float64(cx), float64(cy)})
@@ -132,6 +133,7 @@ func (e *Editor) Logic() {
 // Render draws the editor
 func (e *Editor) Render(screen *ebiten.Image) {
 	bounds := text.BoundString((*e.Fonts[0]), e.Data[0])
+	// TODO: Make Cursor blinking elegant
 	if e.CursorInterval > 0 {
 		e.CursorInterval--
 	} else if e.CursorInterval == 0 {
