@@ -123,6 +123,11 @@ func (e *Editor) Logic() {
 				e.Data[int(e.CursorPos.y)] = line[:int(e.CursorPos.x)-1] + line[int(e.CursorPos.x):]
 				e.CursorPos.x--
 			} else {
+				if len(e.Data[int(e.CursorPos.y)]) > 0 {
+					if e.CursorPos.y > 0 {
+						e.Data[int(e.CursorPos.y-1)] += e.Data[int(e.CursorPos.y)]
+					}
+				}
 				copy(e.Data[int(e.CursorPos.y):], e.Data[int(e.CursorPos.y)+1:])
 				e.Data[len(e.Data)-1] = ""
 				e.Data = e.Data[:len(e.Data)-1]
