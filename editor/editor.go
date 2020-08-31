@@ -130,7 +130,11 @@ func (e *Editor) Logic() {
 		} else if ebiten.IsKeyPressed(ebiten.KeyEnter) {
 			e.KeyInterval = 5
 			e.Data = append(e.Data[:int(e.CursorPos.y)+2], e.Data[int(e.CursorPos.y+1):]...)
-			e.Data[int(e.CursorPos.y)+1] = ""
+			line := e.Data[int(e.CursorPos.y)]
+			e.Data[int(e.CursorPos.y)+1] = line[int(e.CursorPos.x):]
+			e.Data[int(e.CursorPos.y)] = line[:int(e.CursorPos.x)]
+			e.CursorPos.y++
+			e.CursorPos.x = 0
 		}
 	} else {
 		e.KeyInterval--
