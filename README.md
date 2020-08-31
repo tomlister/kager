@@ -9,5 +9,6 @@
 - [x] Editing and live preview of shaders
 - [ ] Loading & saving of external files
 - [ ] Live reload from external editor
+- [ ] Syntax highlighting
 - [ ] Improved UI
 
