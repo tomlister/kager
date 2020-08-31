@@ -145,7 +145,7 @@ func (e *Editor) Render(screen *ebiten.Image) {
 			opts := &ebiten.DrawImageOptions{}
 			activeBackground, _ := ebiten.NewImage(640, bounds.Dy(), ebiten.FilterDefault)
 			activeBackground.Fill(color.RGBA{0x32, 0x32, 0x32, 0xff})
-			opts.GeoM.Translate(10, 5+(e.ScrollOffset.y)+float64(i*bounds.Dy()))
+			opts.GeoM.Translate(0, 5+(e.ScrollOffset.y)+float64(i*bounds.Dy()))
 			screen.DrawImage(activeBackground, opts)
 			activeBackground.Dispose()
 			if e.CursorInterval > 15 {
