@@ -159,26 +159,44 @@ func (e *Editor) Render(screen *ebiten.Image) {
 	} else if e.CursorInterval == 0 {
 		e.CursorInterval = 30
 	}
+	screen.Fill(color.RGBA{0x29, 0x2D, 0x3E, 0xff})
 	for i, data := range e.Data {
 		if int(e.CursorPos.y) == i {
 			opts := &ebiten.DrawImageOptions{}
 			activeBackground, _ := ebiten.NewImage(640, bounds.Dy(), ebiten.FilterDefault)
-			activeBackground.Fill(color.RGBA{0x32, 0x32, 0x32, 0xff})
+			activeBackground.Fill(color.RGBA{0x41, 0x48, 0x63, 0xff})
 			opts.GeoM.Translate(0, 5+(e.ScrollOffset.y)+float64(i*bounds.Dy()))
 			screen.DrawImage(activeBackground, opts)
 			activeBackground.Dispose()
+			syntax := hightLightLine(data)
+			syntax.drawHighLighted(e, 20+int(e.ScrollOffset.y)+(i*int(bounds.Dy())), screen)
 			if e.CursorInterval > 15 {
-				if len(data) == 0 {
-					data += "|"
-				} else {
-					runeData := []rune(data)
-					runeData[int(e.CursorPos.x)] = rune('|')
-					data = string(runeData)
+				xoffset := 0
+				xprev := 0
+				for i, character := range data {
+					if i == int(e.CursorPos.x+1) {
+						break
+					}
+					bounds := text.BoundString((*e.Fonts[0]), string(character))
+					fmt.Printf("%s, %d\n", string(character), bounds.Dx())
+					if bounds.Dx() > 0 {
+						xoffset += bounds.Dx()
+						xprev = bounds.Dx()
+					} else {
+						xoffset += 4
+						xprev = 4
+					}
 				}
+				opts = &ebiten.DrawImageOptions{}
+				cursor, _ := ebiten.NewImage(1, bounds.Dy(), ebiten.FilterDefault)
+				cursor.Fill(color.RGBA{0xab, 0x47, 0xbc, 0xff})
+				opts.GeoM.Translate(float64(20+xoffset-xprev), 5+float64(int(e.ScrollOffset.y)+(i*int(bounds.Dy()))))
+				screen.DrawImage(cursor, opts)
+				cursor.Dispose()
 			}
-			text.Draw(screen, data, (*e.Fonts[0]), 20, 20+int(e.ScrollOffset.y)+(i*int(bounds.Dy())), color.White)
 		} else {
-			text.Draw(screen, data, (*e.Fonts[0]), 20, 20+int(e.ScrollOffset.y)+(i*int(bounds.Dy())), color.White)
+			syntax := hightLightLine(data)
+			syntax.drawHighLighted(e, 20+int(e.ScrollOffset.y)+(i*int(bounds.Dy())), screen)
 		}
 		text.Draw(screen, fmt.Sprintf("%d", 1+i), (*e.Fonts[0]), 2, 20+int(e.ScrollOffset.y)+(i*int(bounds.Dy())), color.White)
 	}
