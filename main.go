@@ -18,6 +18,7 @@ package main
 import (
 	"bytes"
 	"image"
+	"image/color"
 	_ "image/png"
 	"log"
 	"strings"
@@ -101,10 +102,18 @@ func init() {
 
 func main() {
 	shaderEditor := editor.Editor{
-		Data:  strings.Split(strings.ReplaceAll(string(radialblur_go), "\t", "        "), "\n"),
-		Fonts: make([]*font.Face, 0),
+		Data:    strings.Split(strings.ReplaceAll(string(radialblur_go), "\t", "        "), "\n"),
+		Fonts:   make([]*font.Face, 0),
+		Buttons: make([]editor.Button, 0),
 	}
 	shaderEditor.Fonts = append(shaderEditor.Fonts, &defaultFont)
+	shaderEditor.Buttons = append(shaderEditor.Buttons, editor.Button{
+		Position:   editor.Vec2{10.0, 450.0},
+		Text:       "Open",
+		Color:      color.RGBA{0x30, 0x33, 0x48, 0xff},
+		ColorHover: color.RGBA{0x41, 0x48, 0x63, 0xff},
+		Callback:   editor.OpenFileButtonCallback,
+	})
 	shaderViewer := viewer.Viewer{
 		Images: make([]*ebiten.Image, 0),
 	}
